@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TicketStatus;
 use App\Models\Agent;
 use App\Models\Customer;
 use App\Models\Ticket;
@@ -18,14 +19,14 @@ class TicketSeeder extends Seeder
         $customers = Customer::query()->orderBy('id')->get();
 
         $tickets = [
-            ['Cannot access analytics dashboard', 'urgent', 'open'],
-            ['Invoice contains duplicate line item', 'high', 'in_progress'],
-            ['Update account billing address', 'low', 'resolved'],
-            ['Webhook delivery timing out', 'urgent', 'in_progress'],
-            ['New team member invitation failed', 'medium', 'open'],
-            ['Export completed with missing rows', 'high', 'closed'],
-            ['Request for plan comparison', 'low', 'open'],
-            ['Two-factor recovery assistance', 'medium', 'resolved'],
+            ['Cannot access analytics dashboard', 'urgent', TicketStatus::Open],
+            ['Invoice contains duplicate line item', 'high', TicketStatus::InProgress],
+            ['Update account billing address', 'low', TicketStatus::Resolved],
+            ['Webhook delivery timing out', 'urgent', TicketStatus::InProgress],
+            ['New team member invitation failed', 'medium', TicketStatus::Open],
+            ['Export completed with missing rows', 'high', TicketStatus::Closed],
+            ['Request for plan comparison', 'low', TicketStatus::Open],
+            ['Two-factor recovery assistance', 'medium', TicketStatus::Resolved],
         ];
 
         foreach ($tickets as $index => [$subject, $priority, $status]) {

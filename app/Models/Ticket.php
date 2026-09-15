@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\TicketStatus;
 use Database\Factories\TicketFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
@@ -19,7 +21,18 @@ class Ticket extends Model
         'description',
         'priority',
         'status',
+        'escalated_at',
+        'escalation_level',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => TicketStatus::class,
+            'escalated_at' => 'immutable_datetime',
+            'escalation_level' => 'integer',
+        ];
+    }
 
     public function customer(): BelongsTo
     {
@@ -29,5 +42,10 @@ class Ticket extends Model
     public function agent(): BelongsTo
     {
         return $this->belongsTo(Agent::class);
+    }
+
+    public function escalations(): HasMany
+    {
+        return $this->hasMany(TicketEscalation::class);
     }
 }
