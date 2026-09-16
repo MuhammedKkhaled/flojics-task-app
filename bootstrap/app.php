@@ -1,8 +1,11 @@
 <?php
 
+use App\Domain\Tickets\Exceptions\TicketAlreadyEscalated;
+use App\Domain\Tickets\Exceptions\TicketNotEscalatable;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,5 +18,25 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (TicketAlreadyEscalated $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'code' => 'ticket_already_escalated',
+            ], 422);
+        });
+
+        $exceptions->render(function (TicketNotEscalatable $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'code' => 'ticket_not_escalatable',
+            ], 422);
+        });
     })->create();
