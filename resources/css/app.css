@@ -15,18 +15,133 @@ body {
     margin: 0;
 }
 
-.shell {
-    width: min(100% - 2rem, 1040px);
-    margin: 0 auto;
-    padding: 4rem 0;
+button,
+input,
+textarea {
+    font: inherit;
 }
 
-.page-header {
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-shell {
+    min-height: 100vh;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(100% - 2rem, 1040px);
+    margin: 0 auto;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #e1e5ee;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.brand-mark {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.7rem;
+    background: #5663db;
+    color: white;
+    font-weight: 900;
+    place-items: center;
+}
+
+.brand strong,
+.brand small {
+    display: block;
+}
+
+.brand small {
+    margin-top: 0.1rem;
+    color: #747c8f;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.session {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #626b7e;
+    font-size: 0.875rem;
+}
+
+.link-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #4e5ac8;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.page-shell {
+    width: min(100% - 2rem, 1040px);
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
+}
+
+.login-shell {
+    display: grid;
+    width: min(100% - 2rem, 440px);
+    min-height: calc(100vh - 86px);
+    margin: 0 auto;
+    padding: 3rem 0;
+    place-items: center;
+}
+
+.panel {
+    border: 1px solid #e2e5ed;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 18px 50px rgb(36 44 76 / 8%);
+}
+
+.login-panel {
+    width: 100%;
+    padding: 2rem;
+}
+
+.login-panel h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.035em;
+}
+
+.login-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-heading,
+.section-heading {
     display: flex;
     align-items: end;
     justify-content: space-between;
     gap: 2rem;
+}
+
+.page-heading {
     margin-bottom: 2rem;
+}
+
+.section-heading.compact {
+    align-items: center;
 }
 
 .eyebrow {
@@ -38,10 +153,21 @@ body {
     text-transform: uppercase;
 }
 
-h1 {
+h1,
+h2 {
+    color: #172033;
+}
+
+.page-heading h1,
+.ticket-details h1 {
     margin: 0;
     font-size: clamp(2rem, 5vw, 3.25rem);
     letter-spacing: -0.04em;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 1.25rem;
 }
 
 .subtitle {
@@ -62,10 +188,6 @@ h1 {
 
 .ticket-panel {
     overflow: hidden;
-    border: 1px solid #e2e5ed;
-    border-radius: 1rem;
-    background: white;
-    box-shadow: 0 18px 50px rgb(36 44 76 / 8%);
 }
 
 .ticket-card {
@@ -75,6 +197,13 @@ h1 {
     gap: 1.5rem;
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid #edf0f5;
+    color: inherit;
+    text-decoration: none;
+    transition: background 120ms ease;
+}
+
+.ticket-card:hover {
+    background: #fafbff;
 }
 
 .ticket-card:last-child {
@@ -123,24 +252,34 @@ h1 {
 }
 
 .priority-urgent,
-.priority-high {
+.priority-high,
+.status-failed {
     background: #fff0f0;
     color: #bb3636;
 }
 
-.priority-low {
+.priority-low,
+.status-sent,
+.status-completed {
     background: #eef8f1;
     color: #2f7d4b;
 }
 
-.status-open {
+.status-open,
+.status-pending {
     background: #eef2ff;
     color: #4d5cc7;
 }
 
-.status-in_progress {
+.status-in_progress,
+.status-partially_failed {
     background: #fff7e5;
     color: #966613;
+}
+
+.status-escalated {
+    background: #f4edff;
+    color: #7850ad;
 }
 
 .state-message {
@@ -150,22 +289,251 @@ h1 {
     text-align: center;
 }
 
-.state-message.error {
-    color: #bb3636;
+.state-message.error,
+.form-error,
+.delivery-error {
+    color: #b42f3f;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    color: #4e5ac8;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.ticket-layout {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.ticket-details,
+.escalation-form,
+.delivery-panel {
+    padding: 1.5rem;
+}
+
+.ticket-description {
+    margin: 1.5rem 0;
+    color: #626b7e;
+    line-height: 1.65;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
+}
+
+.detail-grid div {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: #f8f9fc;
+}
+
+.detail-grid dt {
+    margin-bottom: 0.4rem;
+    color: #7b8496;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.detail-grid dd {
+    margin: 0;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.escalation-form form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.channel-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.channel-selector legend,
+.field > span {
+    margin-bottom: 0.6rem;
+    color: #50596d;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.channel-selector legend {
+    float: left;
+    width: 100%;
+}
+
+.channel-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid #dfe3ed;
+    border-radius: 0.65rem;
+    cursor: pointer;
+}
+
+.channel-option:has(input:checked) {
+    border-color: #7c86e7;
+    background: #f3f4ff;
+}
+
+.field {
+    display: grid;
+}
+
+.field small {
+    color: #8b93a5;
+    font-weight: 500;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+    border: 1px solid #d8dde8;
+    border-radius: 0.7rem;
+    outline: none;
+    padding: 0.8rem 0.9rem;
+    color: #172033;
+    resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+    border-color: #6975df;
+    box-shadow: 0 0 0 3px rgb(86 99 219 / 12%);
+}
+
+.primary-button {
+    justify-self: start;
+    padding: 0.75rem 1.1rem;
+    border: 0;
+    border-radius: 0.7rem;
+    background: #5663db;
+    color: white;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.primary-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.form-error,
+.muted,
+.notice {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.muted,
+.notice {
+    color: #70798c;
+}
+
+.notice {
+    margin-top: 1.25rem;
+    padding: 0.9rem;
+    border-radius: 0.7rem;
+    background: #f5f6fa;
+}
+
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #5663db;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.live-indicator i {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #5663db;
+    box-shadow: 0 0 0 4px rgb(86 99 219 / 12%);
+}
+
+.delivery-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.delivery-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem 1rem;
+    padding: 1rem;
+    border: 1px solid #e7eaf1;
+    border-radius: 0.75rem;
+}
+
+.delivery-summary,
+.delivery-result {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.delivery-summary span,
+.delivery-result > span:last-child {
+    overflow: hidden;
+    color: #747c8f;
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+}
+
+.delivery-summary strong {
+    text-transform: capitalize;
+}
+
+.delivery-error {
+    grid-column: 1 / -1;
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
 }
 
 @media (max-width: 700px) {
-    .shell {
+    .page-shell {
         padding: 2rem 0;
     }
 
-    .page-header,
+    .page-heading,
+    .section-heading,
     .ticket-card {
         align-items: start;
         flex-direction: column;
     }
 
-    .ticket-count {
+    .ticket-count,
+    .session > span {
         display: none;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-row {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-result {
+        justify-content: space-between;
     }
 }
