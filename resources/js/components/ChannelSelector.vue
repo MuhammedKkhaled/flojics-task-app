@@ -28,12 +28,16 @@ const update = (channelKey, checked, selected) => {
 <template>
     <fieldset class="channel-selector" :disabled="disabled">
         <legend>Notification channels</legend>
-        <label v-for="channel in channels" :key="channel.key" class="channel-option">
+        <label
+            v-for="channel in channels"
+            :key="channel.key"
+            class="channel-option"
+        >
             <input
                 type="checkbox"
                 :checked="modelValue.includes(channel.key)"
                 @change="update(channel.key, $event.target.checked, modelValue)"
-            >
+            />
             <span>{{ channel.label }}</span>
         </label>
     </fieldset>

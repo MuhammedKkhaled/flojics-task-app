@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\TicketEscalation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin TicketEscalation */
 class TicketEscalationResource extends JsonResource
 {
     /** @return array<string, mixed> */

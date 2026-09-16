@@ -21,16 +21,17 @@ const channels = [
     { key: 'slack', label: 'Slack' },
 ];
 
-const mountButton = (props = {}) => mount(EscalateButton, {
-    props: {
-        ticket,
-        channels,
-        ...props,
-    },
-    global: {
-        plugins: [createPinia()],
-    },
-});
+const mountButton = (props = {}) =>
+    mount(EscalateButton, {
+        props: {
+            ticket,
+            channels,
+            ...props,
+        },
+        global: {
+            plugins: [createPinia()],
+        },
+    });
 
 describe('EscalateButton', () => {
     beforeEach(() => {
@@ -42,7 +43,9 @@ describe('EscalateButton', () => {
             ticket: { ...ticket, can_escalate: false },
         });
 
-        expect(wrapper.get('button[type="submit"]').attributes('disabled')).toBeDefined();
+        expect(
+            wrapper.get('button[type="submit"]').attributes('disabled'),
+        ).toBeDefined();
         expect(wrapper.text()).toContain('cannot be escalated');
     });
 
@@ -53,7 +56,9 @@ describe('EscalateButton', () => {
             await checkbox.setValue(false);
         }
 
-        expect(wrapper.get('button[type="submit"]').attributes('disabled')).toBeDefined();
+        expect(
+            wrapper.get('button[type="submit"]').attributes('disabled'),
+        ).toBeDefined();
     });
 
     it('is disabled while escalation is in flight', async () => {

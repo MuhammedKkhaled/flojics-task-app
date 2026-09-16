@@ -33,8 +33,10 @@ const ticketWith = (status) => ({
                 status,
                 attempts: status === 'pending' ? 1 : 2,
                 max_attempts: 4,
-                last_error: status === 'pending' ? 'Slack is unavailable.' : null,
-                last_error_code: status === 'pending' ? 'slack_server_error' : null,
+                last_error:
+                    status === 'pending' ? 'Slack is unavailable.' : null,
+                last_error_code:
+                    status === 'pending' ? 'slack_server_error' : null,
             },
         ],
     },
@@ -59,7 +61,9 @@ describe('DeliveryStatusPanel', () => {
         });
 
         expect(wrapper.text()).toContain('1 / 4 attempts');
-        expect(wrapper.text()).toContain('slack_server_error: Slack is unavailable.');
+        expect(wrapper.text()).toContain(
+            'slack_server_error: Slack is unavailable.',
+        );
         expect(wrapper.text()).toContain('Updating');
     });
 
@@ -75,8 +79,16 @@ describe('DeliveryStatusPanel', () => {
         const router = createRouter({
             history: createMemoryHistory(),
             routes: [
-                { path: '/tickets/:id', name: 'tickets.show', component: TicketShow },
-                { path: '/tickets', name: 'tickets.index', component: { template: '<div />' } },
+                {
+                    path: '/tickets/:id',
+                    name: 'tickets.show',
+                    component: TicketShow,
+                },
+                {
+                    path: '/tickets',
+                    name: 'tickets.index',
+                    component: { template: '<div />' },
+                },
             ],
         });
         await router.push('/tickets/1');

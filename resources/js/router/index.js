@@ -33,7 +33,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-    const isAuthenticated = Boolean(window.localStorage.getItem(TOKEN_STORAGE_KEY));
+    const isAuthenticated = Boolean(
+        window.localStorage.getItem(TOKEN_STORAGE_KEY),
+    );
 
     if (to.meta.requiresAuth && !isAuthenticated) {
         return { name: 'login', query: { redirect: to.fullPath } };

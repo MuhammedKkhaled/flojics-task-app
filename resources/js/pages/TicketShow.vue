@@ -21,11 +21,12 @@ const {
 
 const ticketId = computed(() => route.params.id);
 const deliveries = computed(() => ticket.value?.escalation?.deliveries ?? []);
-const hasPendingDeliveries = computed(() => (
-    deliveries.value.some(({ status }) => status === 'pending')
-));
+const hasPendingDeliveries = computed(() =>
+    deliveries.value.some(({ status }) => status === 'pending'),
+);
 
-const refreshTicket = () => ticketsStore.loadTicket(ticketId.value, { background: true });
+const refreshTicket = () =>
+    ticketsStore.loadTicket(ticketId.value, { background: true });
 const { isPolling, start, stop } = usePolling(refreshTicket, 3000);
 
 watch(
@@ -55,7 +56,9 @@ watch(
 
 <template>
     <main class="page-shell">
-        <RouterLink class="back-link" :to="{ name: 'tickets.index' }">← Back to tickets</RouterLink>
+        <RouterLink class="back-link" :to="{ name: 'tickets.index' }"
+            >← Back to tickets</RouterLink
+        >
 
         <p v-if="loadingCurrent" class="state-message">Loading ticket…</p>
         <section v-else-if="currentError" class="panel">

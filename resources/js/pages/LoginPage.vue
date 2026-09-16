@@ -17,10 +17,11 @@ const submit = async () => {
     try {
         await authStore.login(credentials);
 
-        const redirect = typeof route.query.redirect === 'string'
-            && route.query.redirect.startsWith('/')
-            ? route.query.redirect
-            : '/tickets';
+        const redirect =
+            typeof route.query.redirect === 'string' &&
+            route.query.redirect.startsWith('/')
+                ? route.query.redirect
+                : '/tickets';
 
         await router.push(redirect);
     } catch {
@@ -34,12 +35,19 @@ const submit = async () => {
         <section class="panel login-panel">
             <p class="eyebrow">Reviewer access</p>
             <h1>Sign in to the help desk</h1>
-            <p class="subtitle">Use the seeded agent account to review ticket escalation.</p>
+            <p class="subtitle">
+                Use the seeded agent account to review ticket escalation.
+            </p>
 
             <form class="login-form" @submit.prevent="submit">
                 <label class="field">
                     <span>Email</span>
-                    <input v-model="credentials.email" type="email" autocomplete="username" required>
+                    <input
+                        v-model="credentials.email"
+                        type="email"
+                        autocomplete="username"
+                        required
+                    />
                 </label>
 
                 <label class="field">
@@ -49,12 +57,16 @@ const submit = async () => {
                         type="password"
                         autocomplete="current-password"
                         required
-                    >
+                    />
                 </label>
 
                 <p v-if="error" class="form-error" role="alert">{{ error }}</p>
 
-                <button class="primary-button" type="submit" :disabled="loading">
+                <button
+                    class="primary-button"
+                    type="submit"
+                    :disabled="loading"
+                >
                     {{ loading ? 'Signing in…' : 'Sign in' }}
                 </button>
             </form>

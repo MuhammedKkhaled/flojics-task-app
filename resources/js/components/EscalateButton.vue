@@ -35,12 +35,13 @@ watch(
     { immediate: true },
 );
 
-const disabled = computed(() => (
-    !props.ticket.can_escalate
-    || props.channelsLoading
-    || loading.value
-    || selectedChannels.value.length === 0
-));
+const disabled = computed(
+    () =>
+        !props.ticket.can_escalate ||
+        props.channelsLoading ||
+        loading.value ||
+        selectedChannels.value.length === 0,
+);
 
 const submit = async () => {
     const escalation = await escalate(
@@ -70,8 +71,12 @@ const submit = async () => {
         </p>
 
         <form @submit.prevent="submit">
-            <p v-if="channelsLoading" class="muted">Loading notification channels…</p>
-            <p v-else-if="channelError" class="form-error" role="alert">{{ channelError }}</p>
+            <p v-if="channelsLoading" class="muted">
+                Loading notification channels…
+            </p>
+            <p v-else-if="channelError" class="form-error" role="alert">
+                {{ channelError }}
+            </p>
             <ChannelSelector
                 v-else
                 v-model="selectedChannels"

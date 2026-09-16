@@ -19,7 +19,10 @@ export const getNotificationChannels = async () => {
 };
 
 export const escalateTicket = async (ticketId, payload) => {
-    const response = await apiClient.post(`/tickets/${ticketId}/escalate`, payload);
+    const response = await apiClient.post(
+        `/tickets/${ticketId}/escalate`,
+        payload,
+    );
 
     return response.data.data;
 };

@@ -29,7 +29,11 @@ describe('useEscalation', () => {
         });
 
         const { error, escalate, loading } = useEscalation();
-        const result = await escalate(19, ['email', 'slack'], 'Customer is blocked.');
+        const result = await escalate(
+            19,
+            ['email', 'slack'],
+            'Customer is blocked.',
+        );
 
         expect(escalateTicket).toHaveBeenCalledWith(19, {
             channels: ['email', 'slack'],

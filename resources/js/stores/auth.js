@@ -35,11 +35,15 @@ export const useAuthStore = defineStore('auth', {
                 this.token = session.token;
                 this.user = session.user;
                 window.localStorage.setItem(TOKEN_STORAGE_KEY, session.token);
-                window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(session.user));
+                window.localStorage.setItem(
+                    USER_STORAGE_KEY,
+                    JSON.stringify(session.user),
+                );
             } catch (error) {
-                this.error = error.response?.data?.errors?.email?.[0]
-                    ?? error.response?.data?.message
-                    ?? 'Sign in failed. Please try again.';
+                this.error =
+                    error.response?.data?.errors?.email?.[0] ??
+                    error.response?.data?.message ??
+                    'Sign in failed. Please try again.';
                 throw error;
             } finally {
                 this.loading = false;

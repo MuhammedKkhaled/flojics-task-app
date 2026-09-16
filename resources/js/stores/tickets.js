@@ -27,7 +27,9 @@ export const useTicketsStore = defineStore('tickets', {
             try {
                 this.tickets = await getTickets();
             } catch (error) {
-                this.listError = error.response?.data?.message ?? 'Tickets could not be loaded.';
+                this.listError =
+                    error.response?.data?.message ??
+                    'Tickets could not be loaded.';
             } finally {
                 this.loadingList = false;
             }
@@ -45,7 +47,9 @@ export const useTicketsStore = defineStore('tickets', {
                 const ticket = await getTicket(ticketId);
                 this.current = ticket;
 
-                const index = this.tickets.findIndex(({ id }) => id === ticket.id);
+                const index = this.tickets.findIndex(
+                    ({ id }) => id === ticket.id,
+                );
                 if (index !== -1) {
                     this.tickets[index] = ticket;
                 }
@@ -53,9 +57,11 @@ export const useTicketsStore = defineStore('tickets', {
                 return ticket;
             } catch (error) {
                 if (!background) {
-                    this.currentError = error.response?.status === 404
-                        ? 'Ticket not found.'
-                        : error.response?.data?.message ?? 'Ticket details could not be loaded.';
+                    this.currentError =
+                        error.response?.status === 404
+                            ? 'Ticket not found.'
+                            : (error.response?.data?.message ??
+                              'Ticket details could not be loaded.');
                 }
 
                 throw error;
@@ -77,8 +83,9 @@ export const useTicketsStore = defineStore('tickets', {
             try {
                 this.channels = await getNotificationChannels();
             } catch (error) {
-                this.channelError = error.response?.data?.message
-                    ?? 'Notification channels could not be loaded.';
+                this.channelError =
+                    error.response?.data?.message ??
+                    'Notification channels could not be loaded.';
             } finally {
                 this.loadingChannels = false;
             }

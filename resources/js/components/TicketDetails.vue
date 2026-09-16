@@ -8,9 +8,13 @@ defineProps({
     },
 });
 
-const displayDate = (value) => value
-    ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
-    : 'Not escalated';
+const displayDate = (value) =>
+    value
+        ? new Intl.DateTimeFormat(undefined, {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+          }).format(new Date(value))
+        : 'Not escalated';
 </script>
 
 <template>

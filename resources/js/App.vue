@@ -16,7 +16,14 @@ const signOut = async () => {
 <template>
     <div class="app-shell">
         <header class="app-header">
-            <RouterLink class="brand" :to="isAuthenticated ? { name: 'tickets.index' } : { name: 'login' }">
+            <RouterLink
+                class="brand"
+                :to="
+                    isAuthenticated
+                        ? { name: 'tickets.index' }
+                        : { name: 'login' }
+                "
+            >
                 <span class="brand-mark">F</span>
                 <span>
                     <strong>Flojics</strong>
@@ -26,7 +33,9 @@ const signOut = async () => {
 
             <div v-if="isAuthenticated" class="session">
                 <span>{{ user?.name ?? 'Signed in' }}</span>
-                <button class="link-button" type="button" @click="signOut">Sign out</button>
+                <button class="link-button" type="button" @click="signOut">
+                    Sign out
+                </button>
             </div>
         </header>
 

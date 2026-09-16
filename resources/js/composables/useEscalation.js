@@ -15,7 +15,10 @@ const responseMessage = (requestError) => {
         return 'Your session has expired. Sign in and try again.';
     }
 
-    return requestError.response?.data?.message ?? 'The ticket could not be escalated.';
+    return (
+        requestError.response?.data?.message ??
+        'The ticket could not be escalated.'
+    );
 };
 
 export const useEscalation = () => {

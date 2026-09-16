@@ -10,6 +10,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $role
+ * @property Customer|null $customer
+ * @property Agent|null $agent
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -50,11 +58,13 @@ class User extends Authenticatable
         ];
     }
 
+    /** @return HasOne<Customer, $this> */
     public function customer(): HasOne
     {
         return $this->hasOne(Customer::class);
     }
 
+    /** @return HasOne<Agent, $this> */
     public function agent(): HasOne
     {
         return $this->hasOne(Agent::class);
