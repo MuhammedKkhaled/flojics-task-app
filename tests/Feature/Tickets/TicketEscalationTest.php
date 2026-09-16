@@ -3,8 +3,11 @@
 use App\Enums\DeliveryStatus;
 use App\Enums\TicketStatus;
 use App\Events\TicketEscalated;
+use App\Jobs\SendNotificationDeliveryJob;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Notifications\ChannelManager;
+use App\Services\Notifications\DeliveryRecorder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
@@ -13,6 +16,7 @@ use Laravel\Sanctum\Sanctum;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    config()->set('notifications.simulate_failure');
     config()->set('notifications.channels.email.recipients', ['alerts@example.test']);
     config()->set('notifications.channels.slack.recipient', '#support-escalations');
     config()->set('notifications.default_channels', ['email', 'slack']);
@@ -75,6 +79,14 @@ it('requires authentication', function () {
     ])->assertUnauthorized();
 });
 
+it('returns not found for an unknown ticket', function () {
+    Sanctum::actingAs(User::factory()->agent()->create());
+
+    $this->postJson('/api/tickets/999999/escalate', [
+        'channels' => ['email'],
+    ])->assertNotFound();
+});
+
 it('forbids customers from escalating tickets', function () {
     $customer = User::factory()->create();
     $ticket = Ticket::factory()->create(['status' => TicketStatus::Open]);
@@ -108,7 +120,7 @@ it('rejects closed tickets', function () {
     ])->assertUnprocessable()->assertJsonPath('code', 'ticket_not_escalatable');
 });
 
-it('blocks re-escalation', function () {
+it('allows only one escalation when competing submissions target the same ticket', function () {
     $actor = User::factory()->agent()->create();
     $ticket = Ticket::factory()->create(['status' => TicketStatus::Open]);
 
@@ -123,6 +135,37 @@ it('blocks re-escalation', function () {
     ])->assertUnprocessable()->assertJsonPath('code', 'ticket_already_escalated');
 
     expect($ticket->escalations()->count())->toBe(1);
+});
+
+it('keeps the ticket escalated when every notification channel fails', function () {
+    Event::fake([TicketEscalated::class]);
+    config()->set('notifications.channels.email.recipients', ['invalid-email']);
+    config()->set('notifications.channels.slack.webhook_url');
+
+    $ticket = Ticket::factory()->create(['status' => TicketStatus::Open]);
+    Sanctum::actingAs(User::factory()->agent()->create());
+
+    $response = $this->postJson("/api/tickets/{$ticket->id}/escalate", [
+        'channels' => ['email', 'slack'],
+    ])->assertCreated();
+
+    $escalation = $ticket->fresh()->latestEscalation;
+
+    foreach ($escalation->deliveries as $delivery) {
+        $job = (new SendNotificationDeliveryJob(
+            deliveryId: $delivery->id,
+            channel: $delivery->channel,
+            maxAttempts: $delivery->max_attempts,
+        ))->withFakeQueueInteractions();
+
+        $job->handle(app(ChannelManager::class), app(DeliveryRecorder::class));
+        $job->assertFailed();
+    }
+
+    expect($response->json('data.deliveries'))->toHaveCount(2)
+        ->and($ticket->fresh()->status)->toBe(TicketStatus::Escalated)
+        ->and($escalation->fresh()->status->value)->toBe('failed')
+        ->and($escalation->deliveries()->where('status', DeliveryStatus::Failed)->count())->toBe(2);
 });
 
 it('returns the ticket with its escalation and deliveries', function () {

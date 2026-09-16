@@ -69,14 +69,14 @@ const submit = async () => {
             This ticket cannot be escalated in its current status.
         </p>
 
-        <form v-else @submit.prevent="submit">
+        <form @submit.prevent="submit">
             <p v-if="channelsLoading" class="muted">Loading notification channels…</p>
             <p v-else-if="channelError" class="form-error" role="alert">{{ channelError }}</p>
             <ChannelSelector
                 v-else
                 v-model="selectedChannels"
                 :channels="channels"
-                :disabled="loading"
+                :disabled="loading || !ticket.can_escalate"
             />
 
             <label class="field">
@@ -86,7 +86,7 @@ const submit = async () => {
                     maxlength="1000"
                     rows="4"
                     placeholder="Why does this ticket need attention?"
-                    :disabled="loading"
+                    :disabled="loading || !ticket.can_escalate"
                 />
             </label>
 
