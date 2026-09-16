@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthTokenController extends Controller
+class AuthTokenController extends BaseApiController
 {
     /**
      * @throws ValidationException
@@ -30,16 +29,16 @@ class AuthTokenController extends Controller
             ]);
         }
 
-        return response()->json([
+        return $this->addToResponse([
             'token' => $user->createToken($credentials['device_name'] ?? 'reviewer')->plainTextToken,
             'user' => $user->only(['id', 'name', 'email', 'role']),
-        ]);
+        ])->toResponse();
     }
 
     public function destroy(Request $request): JsonResponse
     {
         $request->user()?->currentAccessToken()?->delete();
 
-        return response()->json([], 204);
+        return $this->setStatusCode(204)->toResponse();
     }
 }

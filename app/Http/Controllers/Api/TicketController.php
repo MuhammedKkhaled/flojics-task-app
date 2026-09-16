@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
 
-class TicketController extends Controller
+class TicketController extends BaseApiController
 {
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
         $tickets = Ticket::query()
             ->with(['customer.user', 'agent.user'])
             ->latest()
             ->get();
 
-        return TicketResource::collection($tickets);
+        return $this->fromResource(TicketResource::collection($tickets))->toResponse();
     }
 
-    public function show(Ticket $ticket): TicketResource
+    public function show(Ticket $ticket): JsonResponse
     {
         $ticket->load([
             'customer.user',
@@ -28,6 +27,6 @@ class TicketController extends Controller
             'latestEscalation.deliveries',
         ]);
 
-        return new TicketResource($ticket);
+        return $this->fromResource(new TicketResource($ticket))->toResponse();
     }
 }

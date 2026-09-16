@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Tickets\EscalateTicketAction;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\EscalateTicketRequest;
 use App\Http\Resources\TicketEscalationResource;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
-class TicketEscalationController extends Controller
+class TicketEscalationController extends BaseApiController
 {
     public function store(
         EscalateTicketRequest $request,
@@ -27,8 +26,9 @@ class TicketEscalationController extends Controller
             reason: $request->reason(),
         );
 
-        return (new TicketEscalationResource($escalation))
-            ->response()
-            ->setStatusCode(201);
+        return $this
+            ->setStatusCode(201)
+            ->fromResource(new TicketEscalationResource($escalation))
+            ->toResponse();
     }
 }
