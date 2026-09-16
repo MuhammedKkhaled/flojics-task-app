@@ -12,7 +12,9 @@ An escalation is committed before notifications are dispatched. A failed webhook
 - MySQL 8
 - Redis (required for Horizon and the normal queue workflow)
 
-## Quick start
+## Setup Instructions
+
+### 1. Clone and install dependencies
 
 Clone the repository, install dependencies, and create your local environment file:
 
@@ -25,12 +27,18 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Create a MySQL database named `flojics_help_desk`, then update `DB_*` values in `.env` if your local MySQL credentials differ. Start Redis and prepare the application:
+### 2. Configure MySQL and Redis
+
+Create a MySQL database named `flojics_help_desk`, then update the `DB_*` values in `.env` if your local MySQL credentials differ. Ensure Redis is running for Horizon and the normal queue workflow.
+
+### 3. Prepare the database and frontend assets
 
 ```bash
 php artisan migrate --seed
 npm run build
 ```
+
+### 4. Start the application
 
 For local development, use three terminals:
 
@@ -108,7 +116,7 @@ Never commit real Slack webhook URLs or credentials. Keep them in `.env` only.
 
 The API routes are available under `/api`. Public routes list tickets and available channels; escalation requires a Sanctum bearer token.
 
-Import [Flojics Help Desk.postman_collection.json](docs/Flojics%20Help%20Desk.postman_collection.json) into Postman. Run **Login** first; its test script stores the token for the protected requests. Set the collection `ticket_id` variable to an open or in-progress seeded ticket before running **Escalate Ticket**.
+Import [Flojics Help Desk.postman_collection.json](Flojics%20Help%20Desk.postman_collection.json) into Postman. Run **Login** first; its test script stores the token for the protected requests. Set the collection `ticket_id` variable to an open or in-progress seeded ticket before running **Escalate Ticket**.
 
 ## Testing and checks
 
@@ -137,10 +145,3 @@ CACHE_STORE=file
 ```
 
 Horizon requires Redis. With this fallback, use `php artisan queue:work` instead. The retry visualization is most representative with Redis and Horizon enabled.
-
-## Further documentation
-
-- [Requirement analysis](docs/REQUIREMENT_ANALYSIS.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Database design](docs/DATABASE_DESIGN.md)
-- [Test cases](docs/TEST_CASES.md)

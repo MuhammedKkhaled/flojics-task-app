@@ -1,181 +1,181 @@
 {
-  "info": {
-    "_postman_id": "3f0d1f89-d8a2-4fbe-a0fd-1f242ea02432",
-    "name": "Flojics Help Desk",
-    "description": "Run Login first. Its test script stores the Sanctum bearer token for protected requests.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:8000"
+    "info": {
+        "_postman_id": "3f0d1f89-d8a2-4fbe-a0fd-1f242ea02432",
+        "name": "Flojics Help Desk",
+        "description": "Run Login first. Its test script stores the Sanctum bearer token for protected requests.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "key": "token",
-      "value": ""
-    },
-    {
-      "key": "ticket_id",
-      "value": "1"
-    }
-  ],
-  "item": [
-    {
-      "name": "Authentication",
-      "item": [
+    "variable": [
         {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const response = pm.response.json();",
-                  "pm.test('returns a token', () => pm.expect(response.token).to.be.a('string').and.not.empty);",
-                  "pm.collectionVariables.set('token', response.token);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"agent@flojics.test\",\n  \"password\": \"password\",\n  \"device_name\": \"postman\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            "key": "base_url",
+            "value": "http://localhost:8000"
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "ticket_id",
+            "value": "1"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "const response = pm.response.json();",
+                                    "pm.test('returns a token', () => pm.expect(response.token).to.be.a('string').and.not.empty);",
+                                    "pm.collectionVariables.set('token', response.token);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"agent@flojics.test\",\n  \"password\": \"password\",\n  \"device_name\": \"postman\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": "{{base_url}}/api/login"
+                    }
+                },
+                {
+                    "name": "Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/user"
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/logout"
+                    }
                 }
-              }
-            },
-            "url": "{{base_url}}/api/login"
-          }
+            ]
         },
         {
-          "name": "Current User",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": "{{base_url}}/api/user"
-          }
-        },
-        {
-          "name": "Logout",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": "{{base_url}}/api/logout"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Tickets",
-      "item": [
-        {
-          "name": "List Tickets",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{base_url}}/api/tickets"
-          }
-        },
-        {
-          "name": "Get Ticket",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{base_url}}/api/tickets/{{ticket_id}}"
-          }
-        },
-        {
-          "name": "Escalate Ticket",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"channels\": [\"email\", \"slack\"],\n  \"reason\": \"Customer operations are blocked.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            "name": "Tickets",
+            "item": [
+                {
+                    "name": "List Tickets",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/tickets"
+                    }
+                },
+                {
+                    "name": "Get Ticket",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/tickets/{{ticket_id}}"
+                    }
+                },
+                {
+                    "name": "Escalate Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"channels\": [\"email\", \"slack\"],\n  \"reason\": \"Customer operations are blocked.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": "{{base_url}}/api/tickets/{{ticket_id}}/escalate"
+                    }
                 }
-              }
-            },
-            "url": "{{base_url}}/api/tickets/{{ticket_id}}/escalate"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Notification Channels",
-      "item": [
+            ]
+        },
         {
-          "name": "List Available Channels",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{base_url}}/api/notification-channels"
-          }
+            "name": "Notification Channels",
+            "item": [
+                {
+                    "name": "List Available Channels",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/notification-channels"
+                    }
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
