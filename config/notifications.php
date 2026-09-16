@@ -12,10 +12,16 @@ return [
         'email' => [
             'label' => 'Email',
             'driver' => EmailChannel::class,
+            'recipients' => array_values(array_filter(array_map(
+                'trim',
+                explode(',', (string) env('NOTIFICATIONS_EMAIL_RECIPIENTS', '')),
+            ))),
         ],
         'slack' => [
             'label' => 'Slack',
             'driver' => SlackChannel::class,
+            'webhook_url' => env('SLACK_WEBHOOK_URL'),
+            'recipient' => env('SLACK_CHANNEL', '#support-escalations'),
         ],
     ],
 
