@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthTokenController::class, 'store'])->middleware('throttle:10,1');
-Route::get('/tickets', [TicketController::class, 'index']);
-Route::get('/tickets/{ticket}', [TicketController::class, 'show']);
-Route::get('/notification-channels', [NotificationChannelController::class, 'index']);
+Route::prefix('tickets')->group(function () {
+    Route::get('/', [TicketController::class, 'index']);
+    Route::get('/{ticket}', [TicketController::class, 'show']);
 
-Route::post('/tickets/{ticket}/escalate', [TicketEscalationController::class, 'store'])
-    ->middleware('auth:sanctum');
+    Route::post('/{ticket}/escalate', [TicketEscalationController::class, 'store'])
+        ->middleware('auth:sanctum');
+});
+
+Route::get('/notification-channels', [NotificationChannelController::class, 'index']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
